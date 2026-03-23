@@ -1,0 +1,53 @@
+{
+  "entities": {
+    "Car": {
+      "title": "Car",
+      "description": "A car model for stock management",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["id", "name", "createdAt"]
+    },
+    "Accessory": {
+      "title": "Accessory",
+      "description": "An accessory for a specific car",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "carId": { "type": "string" },
+        "name": { "type": "string" },
+        "stock": { "type": "number" },
+        "updatedAt": { "type": "number" },
+        "updatedBy": { "type": "string" }
+      },
+      "required": ["id", "carId", "name", "stock", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "cars": {
+      "schema": "Car",
+      "description": "Collection of cars"
+    },
+    "accessories": {
+      "schema": "Accessory",
+      "description": "Collection of accessories"
+    },
+    "backups": {
+      "schema": {
+        "title": "Backup",
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["CAR", "ACCESSORY"] },
+          "data": { "type": "object" },
+          "deletedAt": { "type": "number" }
+        },
+        "required": ["id", "type", "data", "deletedAt"]
+      },
+      "description": "Collection of deleted items for restoration"
+    }
+  }
+}

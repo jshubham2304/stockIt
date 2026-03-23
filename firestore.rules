@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: cars
+    // Fields:
+    //   - id: string (required)
+    //   - name: string (required, unique)
+    //   - createdAt: number (required)
+    //
+    // Collection: accessories
+    // Fields:
+    //   - id: string (required)
+    //   - carId: string (required)
+    //   - name: string (required)
+    //   - stock: number (required, >= 0)
+    //   - updatedAt: number (required)
+    //   - updatedBy: string (optional)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isValidCar(data) {
+      return data.keys().hasAll(['id', 'name', 'createdAt']) &&
+             data.id is string &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.createdAt is number;
+    }
+
+    function isValidAccessory(data) {
+      return data.keys().hasAll(['id', 'carId', 'name', 'stock', 'updatedAt']) &&
+             data.id is string &&
+             data.carId is string &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.stock is number && data.stock >= 0 &&
+             data.updatedAt is number &&
+             (!('updatedBy' in data) || data.updatedBy is string);
+    }
+
+    match /cars/{carId} {
+      allow read: if true;
+      allow create, update: if isValidCar(request.resource.data);
+      allow delete: if true;
+    }
+
+    match /accessories/{accessoryId} {
+      allow read: if true;
+      allow create, update: if isValidAccessory(request.resource.data);
+      allow delete: if true;
+    }
+
+    match /backups/{backupId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+  }
+}

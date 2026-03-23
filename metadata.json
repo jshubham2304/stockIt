@@ -1,0 +1,5 @@
+{
+  "name": "Car Stock Pro",
+  "description": "A production-ready Car Accessories Stock Management system with role-based access, offline persistence, and clean architecture.",
+  "requestFramePermissions": []
+}
